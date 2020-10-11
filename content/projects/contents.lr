@@ -1,0 +1,23 @@
+title: What I do
+---
+body:
+
+I'm trying to make time for many projects I maintain or contribute otherwise. The list is quite long but here are a few experiments and projects I've been caring about lately:
+
+* [intersphinx untangled] ([src][intersphinx-untangled-src]) — it's my
+   attempt to visualize the linkables that Sphinx-based websites expose
+* [Ansinight: ansible-base+ansible Dumb PyPI] ([src][ansinight-src]) — my
+   take at building the nightlies of ansible-base and Ansible for use in CIs
+* [ansible-pylibssh] — this is a thin Cython wrapper of libssh for use in
+   Ansible as a paramiko substitute, I'm mostly helping out with the
+   packaging, docs, CI, and testing automation
+* [ansible-base] — this is the heart of the [Ansible] ecosystem, it's is my main
+   activity during the workdays
+
+[Ansible]: https://www.ansible.com/
+[ansible-base]: https://github.com/ansible/ansible
+[ansible-pylibssh]: https://github.com/ansible/pylibssh
+[Ansinight: ansible-base+ansible Dumb PyPI]: https://webknjaz.github.io/ansinight/
+[ansinight-src]: https://github.com/webknjaz/ansinight
+[intersphinx untangled]: https://webknjaz.github.io/intersphinx-untangled/
+[intersphinx-untangled-src]: https://github.com/webknjaz/intersphinx-untangled

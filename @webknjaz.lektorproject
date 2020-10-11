@@ -1,0 +1,25 @@
+[project]
+name = @webknjaz's ramblings
+locale = en_US
+
+# Refs:
+# * https://github.com/lektor/lektor-atom/issues/4
+# * https://github.com/lektor/lektor-atom/issues/21
+url = https://webknjaz.me
+# NOTE: breaks RSS/atom
+# url_style = relative
+
+[packages]
+lektor-markdown-highlighter = 0.3.1
+lektor-atom = 0.3.1
+
+# FIXME: Breaks RSS/atom?
+# [alternatives.en]
+# name = English
+# primary = yes
+# locale = en_US
+# 
+# [alternatives.uk]
+# name = Ukrainian
+# url_prefix = /uk/
+# locale = uk_UA

@@ -1,0 +1,24 @@
+title: Hello Website
+---
+pub_date: 2020-10-06
+---
+author: Sviatoslav
+---
+body:
+
+This is an example blog post.  Not much here but that's not the point :)
+
+```python
+async def hello(name: str = 'world') -> str:
+    """Greet $username."""  # docstring + comment
+    a, b = 3, '4'
+    await a
+    async with a:
+        del b
+    "ssss"
+    1_00_110
+    some_var: int
+    return name
+```
+---
+twitter_handle: webknjaz

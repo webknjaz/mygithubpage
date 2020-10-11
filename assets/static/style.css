@@ -1,0 +1,155 @@
+::selection {
+  background-color: hsla(42, 82%, 52%, 0.8);
+  background-color: hsl(42, 100%, 28%);
+  color: hsl(0, 0%, 100%);
+}
+
+::selection:window-inactive {
+  background-color: hsla(42, 42%, 32%, 0.7);
+  background-color: hsla(42, 60%, 8%, 0.73);
+}
+
+html {
+    font-size: 1.1rem;
+    /* font-size: 1.887vw; */
+    /* font-size: 1.992vh; */
+}
+
+body {
+    color: rgb(136, 136, 136);
+    color: rgb(109, 109, 109);
+    color: rgb(89, 89, 89);  /* <- Better contrast than the ones above */
+    font-family: 'Verdana', sans-serif;
+    font-family:
+      Montserrat,  /* <- Google Fonts */
+      /* https://systemfontstack.com/ : */
+      -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+    font-size: 1rem;
+    margin: 50px 25px;
+}
+
+a {
+    color: #2a99b6;
+    color: rgb(51, 51, 51);
+    color: rgb(48, 52, 189);
+}
+
+a:hover {
+    color: #33bbdf;
+    color: rgb(0, 0, 0);
+}
+
+div.page p:not(.meta) a:active {
+    font-weight: normal;
+}
+
+div.page p:not(.meta) a:focus {
+    background-color: rgb(232, 232, 151);
+}
+
+div.page p:not(.meta) a:hover {
+    font-weight: bolder;
+}
+
+div.page p:not(.meta) a:visited {
+    color: rgb(158, 16, 94);
+}
+
+header, footer, div.page {
+    width: 760px;
+    margin: 0 auto;
+    background: #daeef3;
+    background: rgba(0, 0, 0, 0.01);
+    padding: 20px 30px;
+}
+
+header h1 {
+    color: #169bbd;
+    color: rgb(85, 85, 85);
+    margin: 3.5rem auto;
+    font-weight: normal;
+    font-size: 42px;
+    font-size: 2.625rem;
+    font-family:
+      "Playfair Display",  /* <- Google Fonts */
+      /* https://systemfontstack.com/ : */
+      -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+}
+
+div p.meta {
+    font-style: italic;
+    /* text-align: right; */
+}
+
+header nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+header nav ul li {
+    display: inline;
+    margin: 0 8px 0 0;
+    padding: 0;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+}
+
+div.page {
+    background: #f1fbfe;
+    background: rgb(255, 255, 255);
+}
+
+div.pagination {
+    font-family:
+      "Playfair Display",  /* <- Google Fonts */
+      /* https://systemfontstack.com/ : */
+      -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+    margin: 1rem auto;
+    text-align: center;
+}
+
+header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+footer {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: rgb(85, 85, 85);
+    font-family:  /* TODO: decide if the titles should use a custom font */
+      "Playfair Display",  /* <- Google Fonts */
+      /* https://systemfontstack.com/ : */
+      -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+}
+
+header nav ul li a {
+    color: rgb(51, 51, 51);
+}
+
+header nav ul li.active a {
+    color: rgba(0, 0, 0, 0.9);
+}
+
+header nav ul li.active {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+code, .hll pre {
+    font-family:
+      "Fira Code Retina", "PT Mono",  /* <- Google Fonts */
+      /* https://systemfontstack.com/ : */
+      Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace;
+}
+
+/* Pygments "trac" theme customizations: */
+.hll .k { color: #0b650b; font-weight: bold } /* Keyword */
+.hll .n { color: rgb(0, 0, 0) } /* Name?? Arg?? */
+.hll .nb { color: #823535; text-decoration: underline } /* Name.Builtin */
+.hll .s1 { color: #bb8844; background-color: #fff3f0 } /* Literal.String.Single */
+.hll .sd { color: #7d4421; background-color: #fffaf0 } /* Literal.String.Doc */
+.hll .s2 { color: #bb8844; background-color: #fff3f0 } /* Literal.String.Double */
