@@ -32,10 +32,9 @@
     <h1>{{ config.PROJECT.name }}</h1>
     <nav>
       <ul class="nav navbar-nav">
-        <li{% if this._path == '/' %} class="active"{% endif
-          %}><a href="{{ '/' | url }}">Welcome</a></li>
+        <li{% if this._path[:5] in ('/', '/blog') %} class="active"{% endif
+          %}><a href="{{ '/' | url }}">Words</a></li>
         {% for href, title in [
-          ['/blog', 'Words'],
           ['/projects', 'Stuff I do'],
           ['/about', "Who's there?"]
         ] %}
