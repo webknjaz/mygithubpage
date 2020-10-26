@@ -31,7 +31,7 @@ body {
 a {
     color: #2a99b6;
     color: rgb(51, 51, 51);
-    color: rgb(48, 52, 189);
+    /* color: rgb(48, 52, 189); */
 }
 
 a:hover {
@@ -74,6 +74,16 @@ header h1 {
       "Playfair Display",  /* <- Google Fonts */
       /* https://systemfontstack.com/ : */
       -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+}
+
+header h1 a {
+    color: rgb(85, 85, 85);
+    text-decoration: none;
+}
+
+header h1 a:hover {
+    color: rgb(85, 85, 85);
+    text-decoration: underline;
 }
 
 div p.meta {
