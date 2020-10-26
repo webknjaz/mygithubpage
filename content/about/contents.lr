@@ -1,17 +1,19 @@
 _model: page
 ---
-title: Me, Myself, and I
----
 body:
 
 ### Hi there 👋
 
-- 🔭 I’m currently working on [ansible/pylibssh](https://github.com/ansible/pylibssh),
-  [ansible/ansible](https://github.com/ansible/ansible) by day 🌅 and when the sun goes
-  down 🌇 I do [all sorts of other FOSS things](https://github.com/sponsors/webknjaz).
-  I used to be heavily involved with [ansible/ansible-lint](
-  /ansible/ansible-lint) but now I've left it in the hands of [@ssbarnea](
-  https://github.com/sponsors/ssbarnea) — please support him in leading the project
+I'm [@webknjaz][GitHub Sponsors] and I do open source.
+
+I have no clue how you got here but it's probably because you either know some
+of my work, or somebody sent you my way. I used to have a blog roughly a decade
+ago but then I stopped updating it, eventually forgot to [pay  € for the
+hosting][DO referral link], and lost it. I believe all of the backups are
+busted... I can't promise to update this site regularly but it's unlikely that
+a GitHub Pages hosted resource will disappear like that :)
+
+A short summary about me:
 - 🌱 I’m currently learning [CPython Internals](
 https://realpython.com/products/cpython-internals-book/)
   and [the basics of OpenShift](
@@ -25,6 +27,18 @@ https://realpython.com/products/cpython-internals-book/)
   maintaining the compatibility with legacy Pythons, dev env, burnouts
 - 📫 How to reach me: tweet
 - 😄 Pronouns: [he/him](http://pronoun.is/he)
+- 🔭 To find out what I'm currently working on, check out the [Stuff I do]
+  page or [my GitHub profile][GitHub]
 - ⚡ Fun fact: wanting to "fix" a game got me interested in computers
   when I was 7 but when I got older I lost interest in games, worked in
   gaming for just 3 months and never looked back
+
+I don't have a specific plan for filling this blog with content but I'll probably text something techy. And when I'll be in a not so nerdy mood, I'll probably rant about some normal people's stuff too.
+
+If you think I abandoned this site, drop by [my twitter][Twitter] to see if I'm still alive. Also, don't be surprised if something seems outdated — it probably is. Enjoy exploring!
+
+[GitHub]: https://github.com/webknjaz
+[GitHub Sponsors]: https://github.com/sponsors/webknjaz
+[DO referral link]: https://m.do.co/c/3b0e89e5e5b5
+[Twitter]: https://twitter.com/webknjaz
+[Stuff I do]: /projects
