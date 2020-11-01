@@ -1,1 +1,5 @@
-blog/contents.lr
+_model: blog
+---
+title: Words
+---
+_slug: prose
