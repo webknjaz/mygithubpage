@@ -1,0 +1,34 @@
+title: Hello Website. Again.
+---
+pub_date: 2020-11-01
+---
+author: Sviatoslav
+---
+body:
+
+Once upon a time, I used to have a blog. I've lost it at some point.
+But here I am again. Starting over... As if this time I won't have
+excuses to postpone writing new posts. The [definition of insanity],
+huh?
+
+Anyway. It's now time to start over. The old blog used [WordPress] and
+thus required a web-server with some software like nginx and php-fpm.
+What sounded necessary back in the day seems ridiculous today.
+Personal blogs don't need to generate pages on flight, or hit a
+separate database. All that's needed is some static site generator.
+And so I chose [Lektor] for this purpose. It's pythonic and very well
+customizable — just what one needs to run a blog that can be published
+to [GitHub Pages].
+
+Urgh... That's a pretty long backstory so I'll stop here.
+
+Welcome to my blog!
+
+
+[definition of insanity]: https://throwgrammarfromthetrain.blogspot.com/2010/10/definition-of-insanity.html
+[GitHub Pages]: https://pages.github.com
+[Lektor]: https://getlektor.com
+[WordPress]: https://wordpress.com
+
+---
+twitter_handle: webknjaz
