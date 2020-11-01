@@ -1,0 +1,37 @@
+name: Build website and publish to GH pages
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  gh-pages:
+    name: 👷
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Switch to Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: Install Lektor from PyPI
+      run: >-
+        python -m
+        pip install
+        -U --user
+        Lektor
+    - name: Check out src from Git
+      uses: actions/checkout@v2
+    - name: Generate the list of compatible versions
+      run: >-
+        ~/.local/bin/lektor
+        build
+        --verbose
+        --output-path www
+    - name: Publish the Lektor website to GH Pages
+      if: github.event_name != 'pull_request'
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        force_orphan: true
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: www
