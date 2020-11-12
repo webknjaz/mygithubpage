@@ -116,6 +116,10 @@ div.page {
     background: rgb(255, 255, 255);
 }
 
+div.blog-post {
+    margin-bottom: 3.5rem;
+}
+
 div.pagination {
     font-family:
       "Playfair Display",  /* <- Google Fonts */

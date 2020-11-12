@@ -18,7 +18,7 @@
   {% if from_index and post.excerpt %}
     {# handcrafted excerpt #}
     {{ post.excerpt }}
-    <br><br><a href="{{ post | url }}">Read Full Post</a>
+    <br><a href="{{ post | url }}">Read Full Post</a>
   {% elif from_index and post.body_short %}
     {# lektor-read-full-post plugin #}
     {{ post.body_short }}
