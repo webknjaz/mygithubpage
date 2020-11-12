@@ -11,6 +11,10 @@ But here I am again. Starting over... As if this time I won't have
 excuses to postpone writing new posts. The [definition of insanity],
 huh?
 
+[definition of insanity]: https://throwgrammarfromthetrain.blogspot.com/2010/10/definition-of-insanity.html
+
+[//]: # (PLUGIN-READ-FULL-POST)
+
 Anyway. It's now time to start over. The old blog used [WordPress] and
 thus required a web-server with some software like nginx and php-fpm.
 What sounded necessary back in the day seems ridiculous today.
@@ -32,11 +36,4 @@ Welcome to my blog!
 ---
 twitter_handle: webknjaz
 ---
-excerpt:
-
-Once upon a time, I used to have a blog. I've lost it at some point.
-But here I am again. Starting over... As if this time I won't have
-excuses to postpone writing new posts. The [definition of insanity],
-huh?
-
-[definition of insanity]: https://throwgrammarfromthetrain.blogspot.com/2010/10/definition-of-insanity.html
+excerpt: 
