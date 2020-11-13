@@ -1,0 +1,102 @@
+title: Et Tu Brutè? Use Travis CI for FOSS no more.
+---
+author: Sviatoslav
+---
+excerpt: 
+
+For many years [Travis CI] has been a go-to solution for
+automatically running the test suites for open source
+projects hosted on GitHub. They used to provide a great
+service and a lot more resources to FOSS projects compared
+to their competitors. Not anymore, though. And why am I not
+surprised?
+
+So can we dump Travis CI yet? Let's see...
+
+[Travis CI]: https://travis-ci.com
+---
+body:
+
+Something sadly[^kill-FOSS-sentiment] expected has happened
+at the beginning of the last week. Travis CI — a pioneer
+in the field that brought automated testing seamlessly
+integrated with GitHub to ~~masses~~ many open-source
+projects on scale — announced that they are migrating all
+of the public projects that previously got the service for
+free to a trial plan with a limited amount of toy credits to
+use[^anti-FOSS].
+
+[^kill-FOSS-sentiment]: A lot of people got upset because of this [Travis CI fuckup].
+[^anti-FOSS]: [Travis gave everyone 10K credits][Travis CI FOSS cut-off] and suggested that people would need to switch to a paid plan after that.
+
+[Travis CI fuckup]: https://twitter.com/mitsuhiko/status/1323223738247192576
+[Travis CI FOSS cut-off]: https://blog.travis-ci.com/2020-11-02-travis-ci-new-billing
+
+Ever since they were acquired[^sinking-idera] by a company
+with a rather shady past[^shady-idera], Travis CI kept
+going down this path. They've been shrinking the resources
+again and again over the past few years and it seems this
+sort of outcome was inevitable, expecially once they've
+suddenly layed off a lot of senior engineers[^layoff-idera].
+
+[^sinking-idera]: Travis [announced the acquisition by Idera][Travis Idera acquisition] on Jan 23, 2019.
+[^shady-idera]: Some people on HN seem to have previous experience with [Idera ruining their acquired businesses][shady Idera]. Also, they've announced all sorts of commitments like keeping the [Travis Foundation] alive and now, almost two years in, that domain is dead and googling doesn't even find any mentions of it.
+[^layoff-idera]: Idera [removed many essensial employees][Idera layoff] without a warning and folk on Twitter call this the [last nail] in the coffin.
+
+[Travis Idera acquisition]: https://blog.travis-ci.com/2019-01-23-travis-ci-joins-idera-inc
+[shady Idera]: https://news.ycombinator.com/item?id=18978346
+[Travis Foundation]: https://foundation.travis-ci.org
+[Idera layoff]: https://news.ycombinator.com/item?id=19218036
+[last nail]: https://twitter.com/kylemh_/status/1323494924306710528
+
+Of course, they've made a rather pathetic attempt to assure
+everyone that they'll continue to support open source. But
+who are they kidding? I bet most of the maintainers have
+better things to do then go begging support for a bunch of
+free credits every now and then just to keep things runing.
+Folks keep underestimating the [FOSS maintenance effort] and
+it even seems like projects using [Tidelift] may be
+inelligible[^travis-uncommercial-foss].
+
+[^travis-uncommercial-foss]: It's not yet clear but people on Twitter speculate that [Tidelift-baked FOSS projects may not get free credits][Travis no credit]
+
+[FOSS maintenance effort]: https://twitter.com/di_codes/status/1326952200413786112
+[Tidelift]: https://tidelift.com/subscription/pkg/pypi-cheroot?utm_source=pypi-cheroot&utm_medium=referral&utm_campaign=blog
+[Travis no credit]: https://twitter.com/hugovk/status/1326935425903185920
+
+### Now What?
+
+Even before the acquisition there's been signs that Travis
+CI wasn't doing well. There are a lot of articles on setting
+up other CIs like [Azure Pipelines] or [GitHub Actions CI/CD
+Workflows]. Most of the alternative options provide a
+comparable experience but may have slightly different ways
+of being set up. There are also even more powerful CIs like
+[Zuul] that are available to significant FOSS projects.
+
+[Azure Pipelines]: https://hynek.me/articles/simple-python-azure-pipelines/
+[GitHub Actions CI/CD Workflows]: https://hynek.me/articles/python-github-actions/
+[Zuul]: https://zuul-ci.org
+
+### So can we dump Travis CI yet?
+
+Yes, we totally can do that! Should we, though? I'm
+personally planning to stop advocating for using Travis CI
+if it's not necessary for a given project. Back in the day,
+I even contributed a GitHub Pages deployment provider into
+their dpl project so I feel a little nostalgic... I used to
+give linting CI set up tasks to my mentees based on Travis.
+But now, I don't want to advertise a FOSS-unfriendly lock-in
+so I'll switch to [GitHub Actions CI/CD Workflows].
+
+There's one case when I may need to consider using Travis CI
+additionally to other systems — there are cases when I'd
+want to run tests in environments (architectures) that none
+of the other CIs provide. But this will be decided on
+per-project basis.
+
+Huh. I guess that's all I've been wanting to write. 🖖
+---
+pub_date: 2020-11-13
+---
+twitter_handle: webknjaz
