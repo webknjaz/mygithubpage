@@ -71,6 +71,7 @@ header, footer, div.page {
 @media (max-width: 600px) {
     header, footer, div.page {
         max-width: 100%;
+        padding: 20px 25px;
     }
 }
 
