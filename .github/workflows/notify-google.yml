@@ -1,0 +1,15 @@
+name: Tell Google to reindex the website
+
+on:
+  page_build:
+
+jobs:
+  gh-pages:
+    name: 📝
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Wait 2 minutes for GitHub Pages to invalidate the cache 
+      run: sleep 120
+    - name: Ping Google about the updated sitemap
+      run: curl https://google.com/ping?sitemap=https://webknjaz.me/sitemap.xml
