@@ -33,5 +33,5 @@ jobs:
       uses: peaceiris/actions-gh-pages@v3
       with:
         force_orphan: true
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        deploy_key: ${{ secrets.GH_PAGES_DEPLOYMENT_KEY }}
         publish_dir: www
