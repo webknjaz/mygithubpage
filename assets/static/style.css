@@ -25,7 +25,7 @@ body {
       /* https://systemfontstack.com/ : */
       -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial, sans-serif;
     font-size: 1rem;
-    margin: 50px 25px;
+    margin: 0 auto;
 }
 
 a {
@@ -62,11 +62,22 @@ h1 a:visited, h2 a:visited, h3 a:visited, h4 a:visited, h5 a:visited, h6 a:visit
 }
 
 header, footer, div.page {
-    width: 760px;
     margin: 0 auto;
     background: #daeef3;
     background: rgba(0, 0, 0, 0.01);
     padding: 20px 30px;
+}
+
+@media (max-width: 600px) {
+    header, footer, div.page {
+        max-width: 100%;
+    }
+}
+
+@media (min-width: 601px) {
+    header, footer, div.page {
+        width: 760px;
+    }
 }
 
 header h1 {
