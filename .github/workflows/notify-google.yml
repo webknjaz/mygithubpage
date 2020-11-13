@@ -13,3 +13,5 @@ jobs:
       run: sleep 120
     - name: Ping Google about the updated sitemap
       run: curl https://google.com/ping?sitemap=https://webknjaz.me/sitemap.xml
+    - name: Ping Google about the updated RSS feed
+      run: curl https://google.com/ping?sitemap=https://webknjaz.me/feed.xml
