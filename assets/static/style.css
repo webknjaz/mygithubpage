@@ -189,3 +189,48 @@ code, .hll pre {
 .hll .s1 { color: #bb8844; background-color: #fff3f0 } /* Literal.String.Single */
 .hll .sd { color: #7d4421; background-color: #fffaf0 } /* Literal.String.Doc */
 .hll .s2 { color: #bb8844; background-color: #fff3f0 } /* Literal.String.Double */
+
+@media (prefers-color-scheme: dark) {
+    body {
+        color: rgb(255, 255, 255);
+        background: rgb(64, 64, 64);  /* FIXME: use HSL? */
+    }
+    div.page {
+        background: rgb(64, 64, 64);  /* FIXME: use HSL? */
+    }
+    header, footer {
+        background: rgb(89, 89, 89);
+    }
+
+    a {
+        color: rgb(42, 153, 182);
+        color: rgb(121, 227, 255);
+    }
+    div.page a:visited {
+        color: rgb(255, 129, 198);
+        /*color: rgb(255, 196, 228);*/
+    }
+    div.page a:focus {
+        background-color: rgb(146, 146, 4);
+        color: rgb(14, 22, 25);
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        color: rgb(205, 205, 205);
+    }
+    header h1, div.page p.meta a,
+    h1 a, h2 a, h3 a, h4 a, h5 a, h6 a,
+    h1 a:visited, h2 a:visited, h3 a:visited, h4 a:visited,
+    h5 a:visited, h6 a:visited {
+        color: rgb(205, 205, 205) !important;
+    }
+    header nav ul li.active {
+        color: rgb(158, 158, 158);
+    }
+    header nav ul li.active a {
+        color: rgb(238, 238, 238);
+    }
+    header nav ul li a {
+        color: rgb(210, 210, 210);
+    }
+}
