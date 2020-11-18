@@ -1,3 +1,7 @@
+:root {
+  color-scheme: light dark;
+}
+
 ::selection {
   background-color: hsla(42, 82%, 52%, 0.8);
   background-color: hsl(42, 100%, 28%);
