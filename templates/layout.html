@@ -27,6 +27,11 @@
   <link href="//fonts.googleapis.com/css?family=PT+Mono&display=swap" rel="stylesheet" type="text/css">
 
   <title>{% block title %}Welcome{% endblock %} — {{ config.PROJECT.name }}</title>
+
+  {% if this.datamodel.filename is not none -%}
+    {# NOTE: Lektor-Open-Graph tracebacks if filename is None #}
+    {{- open_graph.render_tags(this) | indent(width=2) }}
+  {% endif -%}
 </head>
 <body>
   <header>

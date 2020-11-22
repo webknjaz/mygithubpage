@@ -13,6 +13,7 @@ url = https://webknjaz.me
 lektor-markdown-highlighter = 0.3.1
 lektor-atom = 0.3.1
 lektor-read-full-post = 0.3
+Lektor-Open-Graph = 1b4
 
 # FIXME: Breaks RSS/atom?
 # [alternatives.en]
