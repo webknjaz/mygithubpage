@@ -193,6 +193,7 @@ code, .hll pre {
 .hll .s1 { color: #bb8844; background-color: #fff3f0 } /* Literal.String.Single */
 .hll .sd { color: #7d4421; background-color: #fffaf0 } /* Literal.String.Doc */
 .hll .s2 { color: #bb8844; background-color: #fff3f0 } /* Literal.String.Double */
+.hll .sa { color: #bb8844; background-color: #fff3f0 }  /* Str literal prefix in u/b/r/f-strings ??*/
 
 @media (prefers-color-scheme: dark) {
     body {
