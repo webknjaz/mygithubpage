@@ -238,4 +238,17 @@ code, .hll pre {
     header nav ul li a {
         color: rgb(210, 210, 210);
     }
+
+    /* Pygments "trac" theme customizations: */
+    .hll .k { color: #16c716 } /* Keyword */
+    .hll .n { color: rgb(213, 213, 213) } /* Name?? Arg?? */
+    .hll .nb { color: #ffc7c7 } /* Name.Builtin */
+    .hll .s1 { color: #fff3e3; background-color: hsl(40 25% 22%) } /* Literal.String.Single */
+    .hll .sd { color: #ffc6a2; background-color: hsl(40 25% 22%) } /* Literal.String.Doc */
+    .hll .s2 { color: #fff3e3; background-color: hsl(40 25% 22%) } /* Literal.String.Double */
+    .hll .sa { color: #fff3e3; background-color: hsl(40 25% 22%) }  /* Str literal prefix in u/b/r/f-strings ??*/
+    .hll .nn { color: #d5d5d5 }  /* Module name ?? */
+    .hll .mi { color: #00eded }  /* Integer literal ?? */
+    .hll .mf { color: #00eded }  /* Float literal ?? */
+    .hll .nf { color: #ff8989 }  /* Function name definition ?? */
 }
