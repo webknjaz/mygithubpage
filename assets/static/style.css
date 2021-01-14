@@ -118,6 +118,10 @@ div p.meta {
     /* text-align: right; */
 }
 
+.page>.blog-post>p>img {
+    max-width: 100%;
+}
+
 header nav ul {
     list-style: none;
     margin: 0;
