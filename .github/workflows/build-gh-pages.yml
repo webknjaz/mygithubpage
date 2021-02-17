@@ -30,7 +30,8 @@ jobs:
         --output-path www
     - name: Convert all og_image.svg files into PNG format
       # NOTE: SHA is used for security reasons
-      uses: jruipinto/ImageMagick-action@f8361c3
+      uses: >-
+        jruipinto/ImageMagick-action@f8361c3ab427051432299cef10d7c76424f7ff6d
       with:
         command: mogrify -format png **/og_image.svg
     - name: Publish the Lektor website to GH Pages
