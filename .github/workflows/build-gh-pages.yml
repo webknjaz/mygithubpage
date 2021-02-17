@@ -31,6 +31,12 @@ jobs:
           mogrify -format png
           content/og_image.svg
           content/blog/*/og_image.svg
+    - name: Drop SVG og_image files
+      run: >-
+        find .
+        \( -type l -o -type f \)
+        -a -name og_image.svg
+        -delete
     - name: Generate the list of compatible versions
       run: >-
         ~/.local/bin/lektor
