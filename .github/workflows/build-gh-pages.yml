@@ -27,7 +27,10 @@ jobs:
       uses: >-
         jruipinto/ImageMagick-action@f8361c3ab427051432299cef10d7c76424f7ff6d
       with:
-        command: mogrify -format png **/og_image.svg
+        command: >-
+          mogrify -format png
+          content/og_image.svg
+          content/blog/*/og_image.svg
     - name: Generate the list of compatible versions
       run: >-
         ~/.local/bin/lektor
