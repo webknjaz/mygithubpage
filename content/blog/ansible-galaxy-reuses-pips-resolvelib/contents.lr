@@ -20,8 +20,8 @@ And here's how.
 
 One of the [items planned for ansible-core v2.11][ansible-core 2.11
 Roadmap] was improving `ansible-galaxy collection` CLI. The first thing
-needed was making possible to [upgrade collections by `install`
-subcommand without requiring `--force` or
+needed was making possible to [upgrade collections when using the
+`install` subcommand without requiring `--force` or
 `--force-with-deps`][ansible-core issue #71784]. This is something
 [people have been wanting][ansible proposal #181] for quite a while but
 [wasn't possible for roles][ansible proposal #23].
