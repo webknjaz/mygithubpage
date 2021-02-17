@@ -22,18 +22,18 @@ jobs:
         Lektor
     - name: Check out src from Git
       uses: actions/checkout@v2
-    - name: Generate the list of compatible versions
-      run: >-
-        ~/.local/bin/lektor
-        build
-        --verbose
-        --output-path www
     - name: Convert all og_image.svg files into PNG format
       # NOTE: SHA is used for security reasons
       uses: >-
         jruipinto/ImageMagick-action@f8361c3ab427051432299cef10d7c76424f7ff6d
       with:
         command: mogrify -format png **/og_image.svg
+    - name: Generate the list of compatible versions
+      run: >-
+        ~/.local/bin/lektor
+        build
+        --verbose
+        --output-path www
     - name: Publish the Lektor website to GH Pages
       if: github.event_name != 'pull_request'
       uses: peaceiris/actions-gh-pages@v3
