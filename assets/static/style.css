@@ -122,6 +122,10 @@ div p.meta {
     max-width: 100%;
 }
 
+.page>.blog-post>p:last-of-type::after {
+    content: '❡';
+}
+
 header nav ul {
     list-style: none;
     margin: 0;
