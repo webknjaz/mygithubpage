@@ -1,0 +1,208 @@
+title: ansible-galaxy CLI ❤️ resolvelib
+---
+pub_date: 2021-02-17
+---
+author: Sviatoslav Sydorenko
+---
+twitter_handle: webknjaz
+---
+body:
+
+Ever since Ansible Collections got introduced, `ansible-galaxy
+collection install` had to somehow figure the whole dependency tree that
+it's supposed to download and install. The code we had rather entangled.
+But things are going to change starting [ansible-core] 2.11.
+And here's how.
+
+[ansible-core]: https://github.com/ansible/ansible
+
+[//]: # (PLUGIN-READ-FULL-POST)
+
+One of the [items planned for ansible-core v2.11][ansible-core 2.11
+Roadmap] was improving `ansible-galaxy collection` CLI. The first thing
+needed was making possible to [upgrade collections by `install`
+subcommand without requiring `--force` or
+`--force-with-deps`][ansible-core issue #71784]. This is something
+[people have been wanting][ansible proposal #181] for quite a while but
+[wasn't possible for roles][ansible proposal #23].
+
+Then, we also wanted to introduce an additional `ansible-galaxy
+collection install [ -U | --upgrade ]` option. And we also considered
+working on the new `ansible-galaxy collection remove` subcommand but
+never had time to complete this stretch goal[^ansible collection rm].
+
+[^ansible collection rm]: [The attempt to implement it](https://github.com/ansible/ansible/pull/73464) revealed that we need more design discussion to define how exactly `ansible-galaxy collection uninstall` is supposed to work.
+
+Another thing on our radar was caching HTTP responses to Galaxy API so
+that the dependency resolution process could become dramatically faster.
+
+[Jordan], [Sloane] and I formed a feature team to work on this. We
+decided that we'll try to cut the subtasks one per person to spread the
+load somehow. [Jordan] was to work on caching, [Sloane] was assigned to
+do the `--upgrade` task and I was supposed to work on updating the bare
+`install` command to make it not require `--force` (and
+`--force-with-deps` for that matter) when there's a need to update the
+already installed collections.
+
+I was almost unfamiliar with this part of [ansible-core] so I needed to
+get myself familiar with it by starting with exloring the pointers of my
+colleagues on what functions will likely to need updates. What could
+possibly go wrong? Well, as I was going deeper and deeper down the
+rabbit hole, I realized that there was a lot of complexity in the
+existing code and we basically had a rather simplistic dependency
+resolver that looked like a yarn of leaky abstractions. It was hard to
+reason about what strategies it follows to get all the transitive
+dependencies for collections requested to be installed or downloaded.
+At the same time, I remembered that there is this other prominent
+project in the Python ecosystem — [pip] — that recently got a fresh out
+of the oven dependency resolver [resolvelib] It's a third-party library
+that [pip] bundles but it's also freely available for use via `pip
+install`. My buddy [Pradyun] has been involved with this effort (the
+[pip] one) for about four years so I had somebody I could ask dumb
+questions about the dependency resolution :)
+
+And so the idea to replace the dependency resolver was born. Instead of
+patching a few places in the old code here and there, I thought why
+don't I ~~overengineer this task and refactor the whole thing~~ improve
+the maintainability of the subpackage dedicated to managing collection
+CLI subcommands!
+
+I must say that my enthusiasm to ~~break all the things~~ refine a whole
+bunch of already working code was met with a lot of suspicion within the
+broader Ansible Core Engineering team, at first. This additionally meant
+introducing a new runtime dependency — something that we almost never
+do. We now have a good mechanism to help OS packagers seamlessly bundle
+runtime dependencies, though[^_vendor/ dir].
+
+[^_vendor/ dir]: The downstream packagers can now just drop the external dependencies into `lib/ansible/_vendor/` transparently instead of packaging them separately, [starting ansible-base v2.10](https://github.com/ansible/ansible/pull/69850).
+
+I faced with a challenge — *I knew* that the idea was good and now I had
+to convince others that it's not as crazy as it may seem.
+
+I switched into the research mode, looked into what interfaces and hooks
+[resolvelib] requires and came up with a tiny 225 LoC long
+[proof-of-concept][ansible-galaxy+resolvelib PoC]. I even [wired the
+demo into GitHub Actions CI/CD][ansible-galaxy+resolvelib+gha] do people
+see the result instantly. After that, when folks saw how easy it is to
+connect [resolvelib] and delegate the resolution correctness
+responsibility to it, the team agreed that this refactoring would be
+useful and we should proceed.
+
+Meanwhile [Jordan] was working on his caching task. So while I was busy
+figuring out where to stick [resolvelib] into our spaghetti, [Jordan]
+submitted [the API HTTP request caching PR][ansible-core PR #71904] and
+it got merged without any problems.
+
+The resolver replacement work was so fundamental that it turned out to
+block virtually everything else related to our ansible-galaxy CLI UX
+improvements. This was no longer just my task. Yes, I was making most of
+the design for the new architecture but I got just enormous amount of
+help getting this to the finish line. And I enjoyed this collaboration
+so much!
+
+It wasn't just throwing old code away and adding the new one in place.
+One of our main objectives was to keep the behavior as close as possible
+to what the old code did. We've identified a lot of reduntant tests that
+could be removed, rewrote some of the unit tests into integration tests.
+We've also identified a ton of gaps in the test coverage which we filled
+in with many new tests (yaaay! 🙌). [Sloane] also did a lot of manual
+behavior verification and testing 👏.
+
+### resolvelib and fancy design patterns
+
+I mentioned earlier that [resolvelib] was easy to integrate and even
+linked that extremely short PoC. This creates an illusion that it could
+be a "5-minute patch" but it totally wasn't.
+
+[resolvelib] requires one to implement an interface they call "provider"
+with the following hooks:
+* `identify(requirement_or_candidate)` — returns a unique identifier for
+  the package (FQCN in our case)
+* `get_preference(resolution, candidates, information)` — makes a sort
+  key determining the "importance" of a certain requirement
+* `find_matches(requirements)` — returns all candidates matching the
+  given requirements
+* `is_satisfied_by(requirement, candidate)` — double-checks the
+  correctness of the candidates resolver chooses
+* `get_dependencies(candidate)` — retrieves all the direct requirements
+  that given candidate has
+
+This doesn't look too complicated, does it? That's because resolvelib
+really doesn't care what your requirements and candidates are for as
+long as you keep interfacing with it via the same data structures.
+
+This also means that the resolver *doesn't know where to get the info
+about the requirements and the candidates* beyond the data you provide
+to it by implementing these hooks.
+
+So we needed to implement talking to Galaxy API, talking into accont
+more than one Galaxy-like server as a source for retrieving collections.
+We needed to take into account non-Galaxy provided artifacts like direct
+URLs to tarballs or Git repos, or local files and folders.
+
+This all could easily increase the complexity so I introduced the
+concepts of a concrete artifacts manager, and a facade for talking to
+multiple Galaxy APIs and other metadata sources (including the artifacts
+manager). The artifacts manager is responsible for downloading and
+caching the artifacts (if they are not local) as well as retrieving (and
+caching) their metadata. It also has an alternative constructor that can
+clean up the cache directory upon exit.
+Both objects are initialized once (at the beginning) and are passed to
+the consumers as a dependency injection.
+
+Most of the packaging ecosystems are rather simple. They have packages
+with the content of one "atom" inside the artifact. Ansible Collections
+are mostly like that but there are additional cases which make
+everything substantionally more complex. One of the primary use-cases
+that differ is SCM-based collections — they may have one collection in
+the root of the repository but also in a certain (user-defined)
+subdirectory. Moreover, SCM targets may have multiple collections inside
+the same repository (in a namespace subdir that also can be nested as
+defined by the repo creators).
+To solve this, we mark Git targets as "virtual collections" during the
+dependency resolution. The artifacts manager downloads them into a
+temporary directory and marks that directory a single dependency of such
+a "virtual Git collection"). If there's subdirs, we do the same "virtual
+collection" trick with them (except unpacked dirs don't need to be
+copied into cache, the manager just holds their real paths in memory).
+These "virtual collections" are very helpful during the resolution and
+are skipped on the install step (after the resolution is complete).
+
+### Fin.
+
+Well, that's about it. 3–4 months into experimentation, development,
+testing, polishing and reviews, days before the feature freeze, and the
+feature is in devel!
+
+Based on the refactoring, [Sloane] was able to complete her work on the
+`--upgrade` option and it got merged too.
+
+### Feedback, please 🙏
+
+If you are an end-user who uses `ansible-galaxy collection
+[download|install|list|verify]` subcommands, please make sure to tell us
+how well we managed to mix refactoring with the feature development this
+time. Hopefully, we've squashed all the bugs already 🤞 but we missed
+anything — let us know! 🖖
+
+[ansible-core 2.11 Roadmap]: https://docs.ansible.com/ansible/devel/roadmap/ROADMAP_2_11.html
+
+[ansible-galaxy+resolvelib PoC]: https://github.com/webknjaz/ansible-galaxy-collection-resolver/blob/master/__main__.py
+[ansible-galaxy+resolvelib+gha]: https://github.com/webknjaz/ansible-galaxy-collection-resolver/blob/master/.github/workflows/demo.yml
+
+[ansible-core issue #71784]: https://github.com/ansible/ansible/issues/71784
+
+[ansible-core PR #71904]: https://github.com/ansible/ansible/pull/71904
+[ansible-core PR #72591]: https://github.com/ansible/ansible/pull/72591
+
+[ansible-core Priority-3 issues]: https://github.com/ansible/ansible/labels/P3
+
+[ansible proposal #181]: https://github.com/ansible/proposals/issues/181
+[ansible proposal #23]: https://github.com/ansible/proposals/issues/23
+
+[pip]: https://pip.pypa.io
+[resolvelib]: https://github.com/sarugaku/resolvelib
+
+[Jordan]: https://www.bloggingforlogging.com
+[Pradyun]: https://pradyunsg.me
+[Sloane]: https://github.com/s-hertel
