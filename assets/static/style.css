@@ -194,6 +194,9 @@ code, .hll pre {
       Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace;
 }
 
+.hll {
+    margin: 1em auto;
+}
 /* Pygments "trac" theme customizations: */
 .hll .k { color: #0b650b; font-weight: bold } /* Keyword */
 .hll .n { color: rgb(0, 0, 0) } /* Name?? Arg?? */
