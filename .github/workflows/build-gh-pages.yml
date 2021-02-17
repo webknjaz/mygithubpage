@@ -28,7 +28,9 @@ jobs:
         jruipinto/ImageMagick-action@f8361c3ab427051432299cef10d7c76424f7ff6d
       with:
         command: >-
-          mogrify -format png
+          mogrify
+          -format png
+          -resize 3840x
           content/og_image.svg
           content/blog/*/og_image.svg
     - name: Drop SVG og_image files
