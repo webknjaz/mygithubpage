@@ -31,6 +31,11 @@
   {% if this.datamodel.filename is not none -%}
     {# NOTE: Lektor-Open-Graph tracebacks if filename is None #}
     {{- open_graph.render_tags(this) | indent(width=2) }}
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@webknjaz">
+  <meta name="twitter:creator" content="@webknjaz">
   {% endif -%}
 </head>
 <body>
