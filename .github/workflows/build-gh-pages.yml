@@ -27,9 +27,11 @@ jobs:
       uses: >-
         jruipinto/ImageMagick-action@f8361c3ab427051432299cef10d7c76424f7ff6d
       with:
+        # Ref: https://stackoverflow.com/a/57505917/595220
         command: >-
           mogrify
           -format png
+          -density 1200
           -resize 3840x
           content/og_image.svg
           content/blog/*/og_image.svg
