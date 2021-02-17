@@ -7,7 +7,8 @@
     it doesn't work otherwise.
   -->
 
-  [![webknjaz.me header](content/webknjaz.me-header.svg)][webknjaz.me]
+  [![webknjaz.me header][www header img]][webknjaz.me]
 </center>
 
 [webknjaz.me]: https://webknjaz.me
+[www header img]: content/webknjaz.me-header.svg
