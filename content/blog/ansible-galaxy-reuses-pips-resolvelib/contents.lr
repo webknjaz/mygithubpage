@@ -19,8 +19,8 @@ And here's how.
 [//]: # (PLUGIN-READ-FULL-POST)
 
 One of the [items planned for ansible-core v2.11][ansible-core 2.11
-Roadmap] was improving `ansible-galaxy collection` CLI. The first thing
-needed was making possible to [upgrade collections when using the
+Roadmap] was improving `ansible-galaxy collection` CLI 💻. The first
+thing needed was making possible to [upgrade collections when using the
 `install` subcommand without requiring `--force` or
 `--force-with-deps`][ansible-core issue #71784]. This is something
 [people have been wanting][ansible proposal #181] for quite a while but
@@ -50,8 +50,8 @@ colleagues on what functions will likely to need updates. What could
 possibly go wrong? Well, as I was going deeper and deeper down the
 rabbit hole, I realized that there was a lot of complexity in the
 existing code and we basically had a rather simplistic dependency
-resolver that looked like a yarn of leaky abstractions. It was hard to
-reason about what strategies it follows to get all the transitive
+resolver that looked like a yarn of leaky abstractions 🤯. It was hard
+to reason about what strategies it follows to get all the transitive
 dependencies for collections requested to be installed or downloaded.
 At the same time, I remembered that there is this other prominent
 project in the Python ecosystem — [pip] — that recently got a fresh out
