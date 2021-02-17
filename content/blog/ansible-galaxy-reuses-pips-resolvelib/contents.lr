@@ -135,9 +135,9 @@ This also means that the resolver *doesn't know where to get the info
 about the requirements and the candidates* beyond the data you provide
 to it by implementing these hooks.
 
-So we needed to implement talking to Galaxy API, talking into accont
-more than one Galaxy-like server as a source for retrieving collections.
-We needed to take into account non-Galaxy provided artifacts like direct
+So we needed to implement talking to Galaxy API, taking into accont more
+than one Galaxy-like server as a source for retrieving collections. We
+needed to take into account non-Galaxy provided artifacts like direct
 URLs to tarballs or Git repos, or local files and folders.
 
 This all could easily increase the complexity so I introduced the
