@@ -28,6 +28,11 @@ jobs:
         build
         --verbose
         --output-path www
+    - name: Convert all og_image.svg files into PNG format
+      # NOTE: SHA is used for security reasons
+      uses: jruipinto/ImageMagick-action@f8361c3
+      with:
+        command: mogrify -format png **/og_image.svg
     - name: Publish the Lektor website to GH Pages
       if: github.event_name != 'pull_request'
       uses: peaceiris/actions-gh-pages@v3
