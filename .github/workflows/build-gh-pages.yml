@@ -41,7 +41,7 @@ jobs:
         \( -type l -o -type f \)
         -a -name og_image.svg
         -delete
-    - name: Generate the list of compatible versions
+    - name: Generate the static website
       run: >-
         ~/.local/bin/lektor
         build
