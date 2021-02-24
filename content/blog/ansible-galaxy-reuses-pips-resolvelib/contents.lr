@@ -185,7 +185,7 @@ how well we managed to mix refactoring with the feature development this
 time. Hopefully, we've squashed all the bugs already 🤞 but we missed
 anything — [let us know][ansible-core bug report]! 🖖
 
-[ansible-core 2.11 Roadmap]: https://docs.ansible.com/ansible/devel/roadmap/ROADMAP_2_11.html
+[ansible-core 2.11 Roadmap]: https://docs.ansible.com/ansible-core/devel/roadmap/ROADMAP_2_11.html
 
 [ansible-galaxy+resolvelib PoC]: https://github.com/webknjaz/ansible-galaxy-collection-resolver/blob/master/__main__.py
 [ansible-galaxy+resolvelib+gha]: https://github.com/webknjaz/ansible-galaxy-collection-resolver/blob/master/.github/workflows/demo.yml
