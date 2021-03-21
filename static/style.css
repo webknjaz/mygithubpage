@@ -1,0 +1,265 @@
+:root {
+  color-scheme: light dark;
+}
+
+::selection {
+  background-color: hsla(42, 82%, 52%, 0.8);
+  background-color: hsl(42, 100%, 28%);
+  color: hsl(0, 0%, 100%);
+}
+
+::selection:window-inactive {
+  background-color: hsla(42, 42%, 32%, 0.7);
+  background-color: hsla(42, 60%, 8%, 0.73);
+}
+
+html {
+    font-size: 1.1rem;
+    /* font-size: 1.887vw; */
+    /* font-size: 1.992vh; */
+}
+
+body {
+    color: rgb(136, 136, 136);
+    color: rgb(109, 109, 109);
+    color: rgb(89, 89, 89);  /* <- Better contrast than the ones above */
+    font-family: 'Verdana', sans-serif;
+    font-family:
+      Montserrat,  /* <- Google Fonts */
+      /* https://systemfontstack.com/ : */
+      -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+    font-size: 1rem;
+    margin: 0 auto;
+}
+
+a {
+    color: #2a99b6;
+    color: rgb(51, 51, 51);
+    /* color: rgb(48, 52, 189); */
+}
+
+a:hover {
+    color: #33bbdf;
+    color: rgb(0, 0, 0);
+}
+
+div.page a:active {
+    font-weight: normal;
+}
+
+div.page a:focus {
+    background-color: rgb(232, 232, 151);
+}
+
+div.page a:hover {
+    font-weight: bolder;
+}
+
+div.page a:visited {
+    color: rgb(158, 16, 94);
+}
+
+div.page p.meta a,
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a,
+h1 a:visited, h2 a:visited, h3 a:visited, h4 a:visited, h5 a:visited, h6 a:visited {
+    color: rgb(51, 51, 51) !important;
+}
+
+header, footer, div.page {
+    margin: 0 auto;
+}
+
+header, footer {
+    background: #daeef3;
+    background: rgba(0, 0, 0, 0.01);
+    padding: 20px 0;
+    text-align: center;
+    width: 100%;
+}
+
+@media (max-width: 600px) {
+    div.page {
+        max-width: 100%;
+        padding: 20px 25px;
+    }
+}
+
+@media (min-width: 601px) {
+    div.page {
+        width: 760px;
+    }
+}
+
+header h1 {
+    color: #169bbd;
+    color: rgb(85, 85, 85);
+    margin: 3.5rem auto;
+    font-weight: normal;
+    font-size: 42px;
+    font-size: 2.625rem;
+    font-family:
+      "Playfair Display",  /* <- Google Fonts */
+      /* https://systemfontstack.com/ : */
+      -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+}
+
+header h1 a {
+    color: rgb(85, 85, 85);
+    text-decoration: none;
+}
+
+header h1 a:hover {
+    color: rgb(85, 85, 85);
+    text-decoration: underline;
+}
+
+div p.meta {
+    font-style: italic;
+    /* text-align: right; */
+}
+
+.page>.blog-post>p>img {
+    max-width: 100%;
+}
+
+.page>.blog-post>p:last-of-type::after {
+    content: '❡';
+}
+
+header nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+header nav ul li {
+    display: inline;
+    margin: 0 8px 0 0;
+    padding: 0;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+}
+
+div.page {
+    background: #f1fbfe;
+    background: rgb(255, 255, 255);
+    padding: 20px 30px;
+}
+
+div.blog-post {
+    margin-bottom: 3.5rem;
+}
+
+div.pagination {
+    font-family:
+      "Playfair Display",  /* <- Google Fonts */
+      /* https://systemfontstack.com/ : */
+      -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+    margin: 1rem auto;
+    text-align: center;
+}
+
+header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+footer {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: rgb(85, 85, 85);
+    font-family:  /* TODO: decide if the titles should use a custom font */
+      "Playfair Display",  /* <- Google Fonts */
+      /* https://systemfontstack.com/ : */
+      -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+}
+
+header nav ul li a {
+    color: rgb(51, 51, 51);
+}
+
+header nav ul li.active a {
+    color: rgba(0, 0, 0, 0.9);
+}
+
+header nav ul li.active {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+code, .hll pre {
+    font-family:
+      "Fira Code Retina", "PT Mono",  /* <- Google Fonts */
+      /* https://systemfontstack.com/ : */
+      Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace;
+}
+
+.hll {
+    margin: 1em auto;
+}
+/* Pygments "trac" theme customizations: */
+.hll .k { color: #0b650b; font-weight: bold } /* Keyword */
+.hll .n { color: rgb(0, 0, 0) } /* Name?? Arg?? */
+.hll .nb { color: #823535; text-decoration: underline } /* Name.Builtin */
+.hll .s1 { color: #bb8844; background-color: #fff3f0 } /* Literal.String.Single */
+.hll .sd { color: #7d4421; background-color: #fffaf0 } /* Literal.String.Doc */
+.hll .s2 { color: #bb8844; background-color: #fff3f0 } /* Literal.String.Double */
+.hll .sa { color: #bb8844; background-color: #fff3f0 }  /* Str literal prefix in u/b/r/f-strings ??*/
+
+@media (prefers-color-scheme: dark) {
+    body {
+        color: rgb(255, 255, 255);
+        background: rgb(64, 64, 64);  /* FIXME: use HSL? */
+    }
+    div.page {
+        background: rgb(64, 64, 64);  /* FIXME: use HSL? */
+    }
+    header, footer {
+        background: rgb(89, 89, 89);
+    }
+
+    a {
+        color: rgb(42, 153, 182);
+        color: rgb(121, 227, 255);
+    }
+    div.page a:visited {
+        color: rgb(255, 129, 198);
+        /*color: rgb(255, 196, 228);*/
+    }
+    div.page a:focus {
+        background-color: rgb(146, 146, 4);
+        color: rgb(14, 22, 25);
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        color: rgb(205, 205, 205);
+    }
+    header h1, div.page p.meta a,
+    h1 a, h2 a, h3 a, h4 a, h5 a, h6 a,
+    h1 a:visited, h2 a:visited, h3 a:visited, h4 a:visited,
+    h5 a:visited, h6 a:visited {
+        color: rgb(205, 205, 205) !important;
+    }
+    header nav ul li.active {
+        color: rgb(158, 158, 158);
+    }
+    header nav ul li.active a {
+        color: rgb(238, 238, 238);
+    }
+    header nav ul li a {
+        color: rgb(210, 210, 210);
+    }
+
+    /* Pygments "trac" theme customizations: */
+    .hll .k { color: #16c716 } /* Keyword */
+    .hll .n { color: rgb(213, 213, 213) } /* Name?? Arg?? */
+    .hll .nb { color: #ffc7c7 } /* Name.Builtin */
+    .hll .s1 { color: #fff3e3; background-color: hsl(40 25% 22%) } /* Literal.String.Single */
+    .hll .sd { color: #ffc6a2; background-color: hsl(40 25% 22%) } /* Literal.String.Doc */
+    .hll .s2 { color: #fff3e3; background-color: hsl(40 25% 22%) } /* Literal.String.Double */
+    .hll .sa { color: #fff3e3; background-color: hsl(40 25% 22%) }  /* Str literal prefix in u/b/r/f-strings ??*/
+    .hll .nn { color: #d5d5d5 }  /* Module name ?? */
+    .hll .mi { color: #00eded }  /* Integer literal ?? */
+    .hll .mf { color: #00eded }  /* Float literal ?? */
+    .hll .nf { color: #ff8989 }  /* Function name definition ?? */
+}

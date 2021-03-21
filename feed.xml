@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title type="text">@webknjaz's ramblings</title>
+  <id>urn:uuid:d007b4c7-be0f-3e68-a60e-ad4b7bea6ad4</id>
+  <updated>2021-02-17T00:00:00Z</updated>
+  <link href="https://webknjaz.me/prose/" />
+  <link href="https://webknjaz.me/feed.xml" rel="self" />
+  <author>
+    <name></name>
+  </author>
+  <generator uri="https://github.com/ajdavis/lektor-atom" version="0.3.1">Lektor Atom Plugin</generator>
+  <entry xml:base="https://webknjaz.me/prose/ansible-galaxy-reuses-pips-resolvelib/">
+    <title type="text">ansible-galaxy CLI ❤️ resolvelib</title>
+    <id>urn:uuid:3ba42a64-327c-3156-b8d9-ababe4ad2582</id>
+    <updated>2021-02-17T00:00:00Z</updated>
+    <link href="https://webknjaz.me/prose/ansible-galaxy-reuses-pips-resolvelib/" />
+    <author>
+      <name>Sviatoslav Sydorenko</name>
+    </author>
+    <content type="html">&lt;p&gt;Ever since Ansible Collections got introduced, &lt;code&gt;ansible-galaxy
+collection install&lt;/code&gt; had to somehow figure the whole dependency tree that
+it's supposed to download and install. The code we had rather entangled.
+But things are going to change starting &lt;a href=&quot;https://github.com/ansible/ansible&quot;&gt;ansible-core&lt;/a&gt; 2.11.
+And here's how.&lt;/p&gt;
+&lt;p&gt;One of the &lt;a href=&quot;https://docs.ansible.com/ansible-core/devel/roadmap/ROADMAP_2_11.html&quot;&gt;items planned for ansible-core v2.11&lt;/a&gt; was improving &lt;code&gt;ansible-galaxy collection&lt;/code&gt; CLI 💻. The first
+thing needed was making possible to &lt;a href=&quot;https://github.com/ansible/ansible/issues/71784&quot;&gt;upgrade collections when using the
+&lt;code&gt;install&lt;/code&gt; subcommand without requiring &lt;code&gt;--force&lt;/code&gt; or
+&lt;code&gt;--force-with-deps&lt;/code&gt;&lt;/a&gt;. This is something
+&lt;a href=&quot;https://github.com/ansible/proposals/issues/181&quot;&gt;people have been wanting&lt;/a&gt; for quite a while but
+&lt;a href=&quot;https://github.com/ansible/proposals/issues/23&quot;&gt;wasn't possible for roles&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Then, we also wanted to introduce an additional &lt;code&gt;ansible-galaxy
+collection install [ -U | --upgrade ]&lt;/code&gt; option. And we also considered
+working on the new &lt;code&gt;ansible-galaxy collection remove&lt;/code&gt; subcommand but
+never had time to complete this stretch goal&lt;sup class=&quot;footnote-ref&quot; id=&quot;fnref-ansible collection rm&quot;&gt;&lt;a href=&quot;#fn-ansible collection rm&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
+&lt;p&gt;Another thing on our radar was caching HTTP responses to Galaxy API so
+that the dependency resolution process could become dramatically faster.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.bloggingforlogging.com&quot;&gt;Jordan&lt;/a&gt;, &lt;a href=&quot;https://github.com/s-hertel&quot;&gt;Sloane&lt;/a&gt; and I formed a feature team to work on this. We
+decided that we'll try to cut the subtasks one per person to spread the
+load somehow. &lt;a href=&quot;https://www.bloggingforlogging.com&quot;&gt;Jordan&lt;/a&gt; was to work on caching, &lt;a href=&quot;https://github.com/s-hertel&quot;&gt;Sloane&lt;/a&gt; was assigned to
+do the &lt;code&gt;--upgrade&lt;/code&gt; task and I was supposed to work on updating the bare
+&lt;code&gt;install&lt;/code&gt; command to make it not require &lt;code&gt;--force&lt;/code&gt; (and
+&lt;code&gt;--force-with-deps&lt;/code&gt; for that matter) when there's a need to update the
+already installed collections.&lt;/p&gt;
+&lt;p&gt;I was almost unfamiliar with this part of &lt;a href=&quot;https://github.com/ansible/ansible&quot;&gt;ansible-core&lt;/a&gt; so I needed to
+get myself familiar with it by starting with exloring the pointers of my
+colleagues on what functions will likely to need updates. What could
+possibly go wrong? Well, as I was going deeper and deeper down the
+rabbit hole, I realized that there was a lot of complexity in the
+existing code and we basically had a rather simplistic dependency
+resolver that looked like a yarn of leaky abstractions 🤯. It was hard
+to reason about what strategies it follows to get all the transitive
+dependencies for collections requested to be installed or downloaded.
+At the same time, I remembered that there is this other prominent
+project in the Python ecosystem — &lt;a href=&quot;https://pip.pypa.io&quot;&gt;pip&lt;/a&gt; — that recently got a fresh out
+of the oven dependency resolver &lt;a href=&quot;https://github.com/sarugaku/resolvelib&quot;&gt;resolvelib&lt;/a&gt; It's a third-party library
+that &lt;a href=&quot;https://pip.pypa.io&quot;&gt;pip&lt;/a&gt; bundles but it's also freely available for use via &lt;code&gt;pip
+install&lt;/code&gt;. My buddy &lt;a href=&quot;https://pradyunsg.me&quot;&gt;Pradyun&lt;/a&gt; has been involved with this effort (the
+&lt;a href=&quot;https://pip.pypa.io&quot;&gt;pip&lt;/a&gt; one) for about four years so I had somebody I could ask dumb
+questions about the dependency resolution :)&lt;/p&gt;
+&lt;p&gt;And so the idea to replace the dependency resolver was born. Instead of
+patching a few places in the old code here and there, I thought why
+don't I &lt;del&gt;overengineer this task and refactor the whole thing&lt;/del&gt; improve
+the maintainability of the subpackage dedicated to managing collection
+CLI subcommands!&lt;/p&gt;
+&lt;p&gt;I must say that my enthusiasm to &lt;del&gt;break all the things&lt;/del&gt; refine a whole
+bunch of already working code was met with a lot of suspicion within the
+broader Ansible Core Engineering team, at first. This additionally meant
+introducing a new runtime dependency — something that we almost never
+do. We now have a good mechanism to help OS packagers seamlessly bundle
+runtime dependencies, though&lt;sup class=&quot;footnote-ref&quot; id=&quot;fnref-_vendor/ dir&quot;&gt;&lt;a href=&quot;#fn-_vendor/ dir&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
+&lt;p&gt;I faced with a challenge — &lt;em&gt;I knew&lt;/em&gt; that the idea was good and now I had
+to convince others that it's not as crazy as it may seem.&lt;/p&gt;
+&lt;p&gt;I switched into the research mode, looked into what interfaces and hooks
+&lt;a href=&quot;https://github.com/sarugaku/resolvelib&quot;&gt;resolvelib&lt;/a&gt; requires and came up with a tiny 225 LoC long
+&lt;a href=&quot;https://github.com/webknjaz/ansible-galaxy-collection-resolver/blob/master/__main__.py&quot;&gt;proof-of-concept&lt;/a&gt;. I even &lt;a href=&quot;https://github.com/webknjaz/ansible-galaxy-collection-resolver/blob/master/.github/workflows/demo.yml&quot;&gt;wired the
+demo into GitHub Actions CI/CD&lt;/a&gt; do people
+see the result instantly. After that, when folks saw how easy it is to
+connect &lt;a href=&quot;https://github.com/sarugaku/resolvelib&quot;&gt;resolvelib&lt;/a&gt; and delegate the resolution correctness
+responsibility to it, the team agreed that this refactoring would be
+useful and we should proceed.&lt;/p&gt;
+&lt;p&gt;Meanwhile &lt;a href=&quot;https://www.bloggingforlogging.com&quot;&gt;Jordan&lt;/a&gt; was working on his caching task. So while I was busy
+figuring out where to stick &lt;a href=&quot;https://github.com/sarugaku/resolvelib&quot;&gt;resolvelib&lt;/a&gt; into our spaghetti, &lt;a href=&quot;https://www.bloggingforlogging.com&quot;&gt;Jordan&lt;/a&gt;
+submitted &lt;a href=&quot;https://github.com/ansible/ansible/pull/71904&quot;&gt;the API HTTP request caching PR&lt;/a&gt; and
+it got merged without any problems.&lt;/p&gt;
+&lt;p&gt;The resolver replacement work was so fundamental that it turned out to
+block virtually everything else related to our ansible-galaxy CLI UX
+improvements. This was no longer just my task. Yes, I was making most of
+the design for the new architecture but I got just enormous amount of
+help getting this to the finish line. And I enjoyed this collaboration
+so much!&lt;/p&gt;
+&lt;p&gt;It wasn't just throwing old code away and adding the new one in place.
+One of our main objectives was to keep the behavior as close as possible
+to what the old code did. We've identified a lot of reduntant tests that
+could be removed, rewrote some of the unit tests into integration tests.
+We've also identified a ton of gaps in the test coverage which we filled
+in with many new tests (yaaay! 🙌). &lt;a href=&quot;https://github.com/s-hertel&quot;&gt;Sloane&lt;/a&gt; also did a lot of manual
+behavior verification and testing 👏.&lt;/p&gt;
+&lt;h3&gt;resolvelib and fancy design patterns&lt;/h3&gt;
+&lt;p&gt;I mentioned earlier that &lt;a href=&quot;https://github.com/sarugaku/resolvelib&quot;&gt;resolvelib&lt;/a&gt; was easy to integrate and even
+linked that extremely short PoC. This creates an illusion that it could
+be a &quot;5-minute patch&quot; but it totally wasn't.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/sarugaku/resolvelib&quot;&gt;resolvelib&lt;/a&gt; requires one to implement an interface they call &quot;provider&quot;
+with the following hooks:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;identify(requirement_or_candidate)&lt;/code&gt; — returns a unique identifier for
+the package (FQCN in our case)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;get_preference(resolution, candidates, information)&lt;/code&gt; — makes a sort
+key determining the &quot;importance&quot; of a certain requirement&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;find_matches(requirements)&lt;/code&gt; — returns all candidates matching the
+given requirements&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;is_satisfied_by(requirement, candidate)&lt;/code&gt; — double-checks the
+correctness of the candidates resolver chooses&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;get_dependencies(candidate)&lt;/code&gt; — retrieves all the direct requirements
+that given candidate has&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This doesn't look too complicated, does it? That's because resolvelib
+really doesn't care what your requirements and candidates are for as
+long as you keep interfacing with it via the same data structures.&lt;/p&gt;
+&lt;p&gt;This also means that the resolver &lt;em&gt;doesn't know where to get the info
+about the requirements and the candidates&lt;/em&gt; beyond the data you provide
+to it by implementing these hooks.&lt;/p&gt;
+&lt;p&gt;So we needed to implement talking to Galaxy API, taking into accont more
+than one Galaxy-like server as a source for retrieving collections. We
+needed to take into account non-Galaxy provided artifacts like direct
+URLs to tarballs or Git repos, or local files and folders.&lt;/p&gt;
+&lt;p&gt;This all could easily increase the complexity so I introduced the
+concepts of a concrete artifacts manager, and a facade for talking to
+multiple Galaxy APIs and other metadata sources (including the artifacts
+manager). The artifacts manager is responsible for downloading and
+caching the artifacts (if they are not local) as well as retrieving (and
+caching) their metadata. It also has an alternative constructor that can
+clean up the cache directory upon exit.
+Both objects are initialized once (at the beginning) and are passed to
+the consumers as a dependency injection.&lt;/p&gt;
+&lt;p&gt;Most of the packaging ecosystems are rather simple. They have packages
+with the content of one &quot;atom&quot; inside the artifact. Ansible Collections
+are mostly like that but there are additional cases which make
+everything substantionally more complex. One of the primary use-cases
+that differ is SCM-based collections — they may have one collection in
+the root of the repository but also in a certain (user-defined)
+subdirectory. Moreover, SCM targets may have multiple collections inside
+the same repository (in a namespace subdir that also can be nested as
+defined by the repo creators).
+To solve this, we mark Git targets as &quot;virtual collections&quot; during the
+dependency resolution. The artifacts manager downloads them into a
+temporary directory and marks that directory a single dependency of such
+a &quot;virtual Git collection&quot;). If there's subdirs, we do the same &quot;virtual
+collection&quot; trick with them (except unpacked dirs don't need to be
+copied into cache, the manager just holds their real paths in memory).
+These &quot;virtual collections&quot; are very helpful during the resolution and
+are skipped on the install step (after the resolution is complete).&lt;/p&gt;
+&lt;h3&gt;Fin.&lt;/h3&gt;
+&lt;p&gt;Well, that's about it. 3–4 months into experimentation, development,
+testing, polishing and reviews, days before the feature freeze, and the
+feature is in devel!&lt;/p&gt;
+&lt;p&gt;Based on the refactoring, &lt;a href=&quot;https://github.com/s-hertel&quot;&gt;Sloane&lt;/a&gt; was able to complete her work on the
+&lt;code&gt;--upgrade&lt;/code&gt; option and it got merged too.&lt;/p&gt;
+&lt;h3&gt;Feedback, please 🙏&lt;/h3&gt;
+&lt;p&gt;If you are an end-user who uses &lt;code&gt;ansible-galaxy collection
+[download|install|list|verify]&lt;/code&gt; subcommands, please make sure to tell us
+how well we managed to mix refactoring with the feature development this
+time. Hopefully, we've squashed all the bugs already 🤞 but we missed
+anything — &lt;a href=&quot;https://github.com/ansible/ansible/issues/new/choose&quot;&gt;let us know&lt;/a&gt;! 🖖&lt;/p&gt;
+&lt;div class=&quot;footnotes&quot;&gt;
+&lt;hr&gt;
+&lt;ol&gt;&lt;li id=&quot;fn-ansible collection rm&quot;&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/ansible/ansible/pull/73464&quot;&gt;The attempt to implement it&lt;/a&gt; revealed that we need more design discussion to define how exactly &lt;code&gt;ansible-galaxy collection uninstall&lt;/code&gt; is supposed to work.&lt;a href=&quot;#fnref-ansible collection rm&quot; class=&quot;footnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&quot;fn-_vendor/ dir&quot;&gt;&lt;p&gt;The downstream packagers can now just drop the external dependencies into &lt;code&gt;lib/ansible/_vendor/&lt;/code&gt; transparently instead of packaging them separately, &lt;a href=&quot;https://github.com/ansible/ansible/pull/69850&quot;&gt;starting ansible-base v2.10&lt;/a&gt;.&lt;a href=&quot;#fnref-_vendor/ dir&quot; class=&quot;footnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry xml:base="https://webknjaz.me/prose/et-tu-brute-use-travis-ci-for-foss-no-more/">
+    <title type="text">Et Tu Brutè? Use Travis CI for FOSS no more.</title>
+    <id>urn:uuid:89011e35-9af1-3ddd-9fab-13206867c0cc</id>
+    <updated>2020-11-13T00:00:00Z</updated>
+    <link href="https://webknjaz.me/prose/et-tu-brute-use-travis-ci-for-foss-no-more/" />
+    <author>
+      <name>Sviatoslav</name>
+    </author>
+    <content type="html">&lt;p&gt;Something sadly&lt;sup class=&quot;footnote-ref&quot; id=&quot;fnref-kill-foss-sentiment&quot;&gt;&lt;a href=&quot;#fn-kill-foss-sentiment&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; expected has happened
+at the beginning of the last week. Travis CI — a pioneer
+in the field that brought automated testing seamlessly
+integrated with GitHub to &lt;del&gt;masses&lt;/del&gt; many open-source
+projects on scale — announced that they are migrating all
+of the public projects that previously got the service for
+free to a trial plan with a limited amount of toy credits to
+use&lt;sup class=&quot;footnote-ref&quot; id=&quot;fnref-anti-foss&quot;&gt;&lt;a href=&quot;#fn-anti-foss&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
+&lt;p&gt;Ever since they were acquired&lt;sup class=&quot;footnote-ref&quot; id=&quot;fnref-sinking-idera&quot;&gt;&lt;a href=&quot;#fn-sinking-idera&quot;&gt;3&lt;/a&gt;&lt;/sup&gt; by a company
+with a rather shady past&lt;sup class=&quot;footnote-ref&quot; id=&quot;fnref-shady-idera&quot;&gt;&lt;a href=&quot;#fn-shady-idera&quot;&gt;4&lt;/a&gt;&lt;/sup&gt;, Travis CI kept
+going down this path. They've been shrinking the resources
+again and again over the past few years and it seems this
+sort of outcome was inevitable, expecially once they've
+suddenly layed off a lot of senior engineers&lt;sup class=&quot;footnote-ref&quot; id=&quot;fnref-layoff-idera&quot;&gt;&lt;a href=&quot;#fn-layoff-idera&quot;&gt;5&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
+&lt;p&gt;Of course, they've made a rather pathetic attempt to assure
+everyone that they'll continue to support open source. But
+who are they kidding? I bet most of the maintainers have
+better things to do then go begging support for a bunch of
+free credits every now and then just to keep things runing.
+Folks keep underestimating the &lt;a href=&quot;https://twitter.com/di_codes/status/1326952200413786112&quot;&gt;FOSS maintenance effort&lt;/a&gt; and
+it even seems like projects using &lt;a href=&quot;https://tidelift.com/subscription/pkg/pypi-cheroot?utm_source=pypi-cheroot&amp;amp;utm_medium=referral&amp;amp;utm_campaign=blog&quot;&gt;Tidelift&lt;/a&gt; may be
+inelligible&lt;sup class=&quot;footnote-ref&quot; id=&quot;fnref-travis-uncommercial-foss&quot;&gt;&lt;a href=&quot;#fn-travis-uncommercial-foss&quot;&gt;6&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
+&lt;h3&gt;Now What?&lt;/h3&gt;
+&lt;p&gt;Even before the acquisition there's been signs that Travis
+CI wasn't doing well. There are a lot of articles on setting
+up other CIs like &lt;a href=&quot;https://hynek.me/articles/simple-python-azure-pipelines/&quot;&gt;Azure Pipelines&lt;/a&gt; or &lt;a href=&quot;https://hynek.me/articles/python-github-actions/&quot;&gt;GitHub Actions CI/CD
+Workflows&lt;/a&gt;. Most of the alternative options provide a
+comparable experience but may have slightly different ways
+of being set up. There are also even more powerful CIs like
+&lt;a href=&quot;https://zuul-ci.org&quot;&gt;Zuul&lt;/a&gt; that are available to significant FOSS projects.&lt;/p&gt;
+&lt;h3&gt;So can we dump Travis CI yet?&lt;/h3&gt;
+&lt;p&gt;Yes, we totally can do that! Should we, though? I'm
+personally planning to stop advocating for using Travis CI
+if it's not necessary for a given project. Back in the day,
+I even contributed a GitHub Pages deployment provider into
+their dpl project so I feel a little nostalgic... I used to
+give linting CI set up tasks to my mentees based on Travis.
+But now, I don't want to advertise a FOSS-unfriendly lock-in
+so I'll switch to &lt;a href=&quot;https://hynek.me/articles/python-github-actions/&quot;&gt;GitHub Actions CI/CD Workflows&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;There's one case when I may need to consider using Travis CI
+additionally to other systems — there are cases when I'd
+want to run tests in environments (architectures) that none
+of the other CIs provide. But this will be decided on
+per-project basis.&lt;/p&gt;
+&lt;p&gt;Huh. I guess that's all I've been wanting to write. 🖖&lt;/p&gt;
+&lt;div class=&quot;footnotes&quot;&gt;
+&lt;hr&gt;
+&lt;ol&gt;&lt;li id=&quot;fn-kill-foss-sentiment&quot;&gt;&lt;p&gt;A lot of people got upset because of this &lt;a href=&quot;https://twitter.com/mitsuhiko/status/1323223738247192576&quot;&gt;Travis CI fuckup&lt;/a&gt;.&lt;a href=&quot;#fnref-kill-foss-sentiment&quot; class=&quot;footnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&quot;fn-anti-foss&quot;&gt;&lt;p&gt;&lt;a href=&quot;https://blog.travis-ci.com/2020-11-02-travis-ci-new-billing&quot;&gt;Travis gave everyone 10K credits&lt;/a&gt; and suggested that people would need to switch to a paid plan after that.&lt;a href=&quot;#fnref-anti-foss&quot; class=&quot;footnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&quot;fn-sinking-idera&quot;&gt;&lt;p&gt;Travis &lt;a href=&quot;https://blog.travis-ci.com/2019-01-23-travis-ci-joins-idera-inc&quot;&gt;announced the acquisition by Idera&lt;/a&gt; on Jan 23, 2019.&lt;a href=&quot;#fnref-sinking-idera&quot; class=&quot;footnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&quot;fn-shady-idera&quot;&gt;&lt;p&gt;Some people on HN seem to have previous experience with &lt;a href=&quot;https://news.ycombinator.com/item?id=18978346&quot;&gt;Idera ruining their acquired businesses&lt;/a&gt;. Also, they've announced all sorts of commitments like keeping the &lt;a href=&quot;https://foundation.travis-ci.org&quot;&gt;Travis Foundation&lt;/a&gt; alive and now, almost two years in, that domain is dead and googling doesn't even find any mentions of it.&lt;a href=&quot;#fnref-shady-idera&quot; class=&quot;footnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&quot;fn-layoff-idera&quot;&gt;&lt;p&gt;Idera &lt;a href=&quot;https://news.ycombinator.com/item?id=19218036&quot;&gt;removed many essensial employees&lt;/a&gt; without a warning and folk on Twitter call this the &lt;a href=&quot;https://twitter.com/kylemh_/status/1323494924306710528&quot;&gt;last nail&lt;/a&gt; in the coffin.&lt;a href=&quot;#fnref-layoff-idera&quot; class=&quot;footnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&quot;fn-travis-uncommercial-foss&quot;&gt;&lt;p&gt;It's not yet clear but people on Twitter speculate that &lt;a href=&quot;https://twitter.com/hugovk/status/1326935425903185920&quot;&gt;Tidelift-baked FOSS projects may not get free credits&lt;/a&gt;&lt;a href=&quot;#fnref-travis-uncommercial-foss&quot; class=&quot;footnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry xml:base="https://webknjaz.me/prose/brave-new-world/">
+    <title type="text">Hello Website. Again.</title>
+    <id>urn:uuid:d0e0788e-fe1d-3052-b17d-3bb572d381ef</id>
+    <updated>2020-11-01T00:00:00Z</updated>
+    <link href="https://webknjaz.me/prose/brave-new-world/" />
+    <author>
+      <name>Sviatoslav</name>
+    </author>
+    <content type="html">&lt;p&gt;Once upon a time, I used to have a blog. I've lost it at some point.
+But here I am again. Starting over... As if this time I won't have
+excuses to postpone writing new posts. The &lt;a href=&quot;https://throwgrammarfromthetrain.blogspot.com/2010/10/definition-of-insanity.html&quot;&gt;definition of insanity&lt;/a&gt;,
+huh?&lt;/p&gt;
+&lt;p&gt;Anyway. It's now time to start over. The old blog used &lt;a href=&quot;https://wordpress.com&quot;&gt;WordPress&lt;/a&gt; and
+thus required a web-server with some software like nginx and php-fpm.
+What sounded necessary back in the day seems ridiculous today.
+Personal blogs don't need to generate pages on flight, or hit a
+separate database. All that's needed is some static site generator.
+And so I chose &lt;a href=&quot;https://getlektor.com&quot;&gt;Lektor&lt;/a&gt; for this purpose. It's pythonic and very well
+customizable — just what one needs to run a blog that can be published
+to &lt;a href=&quot;https://pages.github.com&quot;&gt;GitHub Pages&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Urgh... That's a pretty long backstory so I'll stop here.&lt;/p&gt;
+&lt;p&gt;Welcome to my blog!&lt;/p&gt;
+</content>
+  </entry>
+</feed>

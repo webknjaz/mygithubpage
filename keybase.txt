@@ -1,0 +1,150 @@
+==================================================================
+https://keybase.io/webknjaz
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://webknjaz.me
+  * I am webknjaz (https://keybase.io/webknjaz) on keybase.
+  * I have a public key with fingerprint C430 E859 352D 737F D5C6  17DA 9345 E8FE A89C A455
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "0120e0d4de84131cb277169ccc5ee0f7e2e13b4bec488907e4f614fae0a8ea7d08f60a",
+      "fingerprint": "c430e859352d737fd5c617da9345e8fea89ca455",
+      "host": "keybase.io",
+      "key_id": "9345e8fea89ca455",
+      "kid": "0101c135df0be4434ff8e5f8863c968ff712a194207c4bf7f4ef1a9bc8f2dafb1c580a",
+      "uid": "771e2927e1d44cdf4f492fbae88a0719",
+      "username": "webknjaz"
+    },
+    "service": {
+      "hostname": "webknjaz.me",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 1
+  },
+  "ctime": 1524613163,
+  "expire_in": 157680000,
+  "prev": "d2852296e28afbcfa89bc113704def67e0f3b838b9a28e8f98707d86f1e73a2e",
+  "seqno": 24,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: Keybase OpenPGP v2.0.76
+Comment: https://keybase.io/crypto
+
+yMNqAnicbVJ7UFRVHF5ETVHUsCJ0mrELjRNtcM99nrtBGUpIjVMzuFAEbfdxDi67
+7d3HXZI3UziWRkA+GDDDBwE1NDQULom8H1nE2AvSRGQQQp0KTVFmZKS7jP7TdP45
+8/ud7/vO93v0BgcaggL2xV++W/9xjTlgoKvCa0i92PlULiGpSjZhyiVsaOFCdgV5
+NIvNqhAmggQUiUiFURBkAA1kieJ5wAmyLLMIkZhHFAK0xEhIZiAUSB4xmAMMFhEp
+QiTyCgkxR4qEkcBWRwZyO91Wh6bLygxNIsgKNEspPM1jhZU5wCuiQDMsghiJUJBF
+hmV14g7V42fo5iTRg6Ksqp7TA8uCvf/B3/dNAhnQrIJJCTEMzWAMEYsh5GhZ4CDG
+PKBEIDAUycuMhHnMIAxEQZIhphQRS0Bm4YJv74KcXjSiBIpHQGEYWcEMZgQKSyKC
+UCR5IPiBHuR2iG8hHf02kmyOTDGHyDcSejbLKiN/Y/2V/AcRpUdGwulWNVVW7frD
+Dk1zekx+opbtvIe03NOwSFaHordRZ2Qht8eqOggT0JGyZvWLApZiOH1GHG0k0E6n
+1Y0sVj+C5TlI6sf/D8rSJRUKshQlcIiCeqUy1psnyQDQPKmPGXO8PldagjSUBJGC
+encFyJO8AjkMEE+LlN+xB7kcKmGiGN2nmKFreqwZDlHzuhGR392VttgQEGRYumSR
+f78MQcvX3N+64bnV82kRj7DPMeb8h/pebn2+4cYDfwTeuTqYZQ8bCY/RCnvBdahG
+L5sOOT70zOWMwK8z/2msKhTO9LU61qq2udafJkpWzI3MlLTPUlenVW+SvcWZv/ZS
+8MzRnLiV+/ckt4/HVDQZv6r19Xz7xqmigm0xn7evc9oWa64lY4+vPtZTO3yyGMf+
+knfi74qyODvRkPzZF5mLZl2fHEyYevKoL1qYamvuK6iLrUo/fO7We6c3BXq/rK/5
+ffnJ9TcqXy944macS216P2G+aWymcMK0cTKi84gr7bg5M7e0KK9mZP/I6flscTzv
+1Pdlt0DtFd5Wmnzgox88O3N9L263eOePlTe29G+OHKzcOBPCTpgrN1Hx3c0dF7ZW
+XQyZTk1NfCGh67eG18KL1g0XVPOrelYU7y67FoZTAonbOYrzpmC+9OjgzwP95Q0n
+uuuF9Gd3R7QlTol/FnR11LneeZPf1tyxWbtzKCru2pW62ci8Vx52hLTEt44VN2/p
+9H0wtL7S96PXnPJrygHiIB4d6hZWbp0Y0EK54nMX3427ELRm16dYOftd9bj4V2RT
+wHRadej2DR+e3zNXfaalsC27N8HoJgeLSp6OnTm06kh0VcKD9rg2qbowZnaX73Zo
+dlmpKfylzv5JckNj2OjSuvNR1yeBMzL97OF9Yh5puDuaPLeMTHRkPbYlOCnp1fII
+4zd7u1o7XP8CXdPQaw==
+=mSNa
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/webknjaz
+
+==================================================================
+==================================================================
+https://keybase.io/webknjaz
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://webknjaz.com
+  * I am webknjaz (https://keybase.io/webknjaz) on keybase.
+  * I have a public key with fingerprint C430 E859 352D 737F D5C6  17DA 9345 E8FE A89C A455
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "0120e0d4de84131cb277169ccc5ee0f7e2e13b4bec488907e4f614fae0a8ea7d08f60a",
+      "fingerprint": "c430e859352d737fd5c617da9345e8fea89ca455",
+      "host": "keybase.io",
+      "key_id": "9345e8fea89ca455",
+      "kid": "0101c135df0be4434ff8e5f8863c968ff712a194207c4bf7f4ef1a9bc8f2dafb1c580a",
+      "uid": "771e2927e1d44cdf4f492fbae88a0719",
+      "username": "webknjaz"
+    },
+    "service": {
+      "hostname": "webknjaz.com",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 1
+  },
+  "ctime": 1524613430,
+  "expire_in": 157680000,
+  "prev": "2c3e8278519f4f1ed7f06de1dd2f7fc30d68f2c19907a794e7f4154a2503a03c",
+  "seqno": 25,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: Keybase OpenPGP v2.0.76
+Comment: https://keybase.io/crypto
+
+yMNtAnicbVJ/TFVVAH6oGA9jEmApw6yLhhKxe+7vC0roIH4IklTUCHneH+fCFXj3
+8X6RMgyWAWFbGNPImOsFGGQJZAMJ0IHgXGyhyGS4GgVN5FdKZLxnBJ3H9J/W+efs
+nPN93/m+75xen9U6b4+q2LtLDTV1b3j0d1fbdOmj3UwhJmryYSyiEMuBKxPMlaHF
+ashRZSwCwwGBQ1ymZMhRgASSSLAsYHhJkmgIcYWFBASkSIlQojiOx1lIKQygFAHi
+AgcFVsY5hcEFLAxTVGMWNJvMqtGKZCWKxCFH8yRNyCzJKjItMYCVBZ6kaMgpUOB4
+SaBoGhGzNYubgcyJggWGqxraQwvDir3/wT/2jQMJkLSs4CKkKJJSFA7SCscxpMQz
+nKKwgBAATxE4K1GiwioUVIDAixKnELKgiECiuRXfthU5FBoSPMFCIFOUJCuUQvGE
+IgqQ4wScBbwbaIFmo5AHEboAijnGQ8IRrCgMQ7t2VYLuYt1J/oMIl7Q8xDWZNasm
+abnoJNtqNVki3EzrYdMjqOGRiEFUjTLqETHs0GxRNSMWARBSsqpuVUATFANIVG0Y
+Bt8xqWZoUN0ImmU4HA33PdCOJAmJhBzBcjTgURIAZVbBGRllkwnUhETiMmqIkACP
+HlRgeQqiegBNCQSNkwJOSpg7Vr5RwyIIGvkUspCmRc0yClabGWJFPd0Za3Qe3rq1
+nqvcH0znrfd9/O2+j/LV3bBNSY2vB17siAw9+XHIyV01J0aXbrW+sLdypK3lkmOi
+YgH4OfpTZwOm7l4v3jL2W2hLTltlKpO8mPTa35/5B+Xb4sd3Z7T/bhFPr2OOxtxb
+Hm6n+7qmQuNiPh2N+yZ6Z2nqnGs8/pTv28Hy9foNW3Mub4//hxnLr4uFnW9+Eji7
+8NJ46f3VaUf2pFc7ywMmh/5K9jiYkP6gPmH/l0MbtLOfDz81E2OO7H0Gn//5x8SJ
+bis9HHzxQfT6lITyC+/eObPj+I0Xt5RwX1neW1+a+EPjruWmwaC+KOfMubwP6Olx
+6xcfbtN/2xCYttivz912pdKr/a26mfdLbk4k/rL12d03e2c37gjoKnI57AfU2UtH
+60MGXnH6z3l1zuumYzq8d/60HDnXZtgeu3kt7Vvst/lcreKMOO8pLMofxTKNNuuF
+Jar3V31rYtjVryNdncEhLR0987ezG1w1QfYni/0nHaPPBbhqXy3YVDG4aVGr+rPM
+OeB8WU650tR1qrnqu6XMnuUzafPHwpPLAX07N5Mt9GpaM5mkqzi7EJdxf/DauqHS
+mviHI7f6m+f7tMKpaLt+LvN4tFg22WyPMib3Xr13mbh20OHjM9Z6/vmAlH0jf1Qf
+yIo2F20MXexqXRqezi8wDrkMex37FpJKvITgAcmvw1vvldV9wvP0wiF1Vdudp2v3
+tzwsazr2RG5mrelfAJ7Qyw==
+=Vy1P
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/webknjaz
+
+==================================================================

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="supported-color-schemes" content="light dark">
+
+  <meta name="author" content="Sviatoslav Sydorenko">
+  <!--meta name="copyright" content="Sviatoslav Sydorenko"-->
+  <meta name="description" content="@webknjaz&#39;s ramblings — personal blog of a FOSS maintainer">
+  <meta name="robots" content="all">
+
+  <meta name="p:domain_verify" content="8ac6cdaefda8d0a20ed08fb5c9fd3352">
+
+  <link rel="profile" href="http://gmpg.org/xfn/11">
+
+  <link rel="prefetch">
+  <link rel="dns-prefetch" href="//fonts.googleapis.com">
+
+  <link rel="alternate" type="application/rss+xml" title="RSS Feed for @webknjaz&#39;s ramblings" href="/feed.xml">
+  <link rel="stylesheet" href="../../static/pygments.css">
+  <link rel="stylesheet" href="../../static/style.css">
+
+  <link href="//fonts.googleapis.com/css?family=Fira+Code&display=swap" rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=Montserrat:500,500italic,300,300italic&display=swap" rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=Playfair+Display:500,500italic,400,400italic&display=swap" rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=PT+Mono&display=swap" rel="stylesheet" type="text/css">
+
+  <title>ansible-galaxy CLI ❤️ resolvelib — @webknjaz&#39;s ramblings</title>
+
+  <meta property="og:site_name" content="@webknjaz&#39;s ramblings">
+  <meta property="og:url" content="https://webknjaz.me/prose/ansible-galaxy-reuses-pips-resolvelib/">
+  <meta property="og:title" content="ansible-galaxy CLI ❤️ resolvelib">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://webknjaz.me/prose/ansible-galaxy-reuses-pips-resolvelib/og_image.png">
+  <meta property="og:image:width" content="3840">
+  <meta property="og:image:height" content="1280">
+  <meta property="og:image:type" content="image/png">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@webknjaz">
+  <meta name="twitter:creator" content="@webknjaz">
+  </head>
+<body>
+  <header>
+    <h1><a href="../../">@webknjaz&#39;s ramblings</a></h1>
+    <nav>
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="../../">Words</a></li>
+        
+          <li><a href="../../projects/">Stuff I do</a></li>
+        
+          <li><a href="../../about/">Who&#39;s there?</a></li>
+        
+      </ul>
+    </nav>
+  </header>
+  <div class="page">
+    
+  
+  <div class="blog-post">
+  
+    <h2>ansible-galaxy CLI ❤️ resolvelib</h2>
+  
+  <p class="meta">
+    written by
+    
+      <a href="https://twitter.com/webknjaz">Sviatoslav Sydorenko</a>
+    
+    on 2021-02-17
+  </p>
+  
+    <p>Ever since Ansible Collections got introduced, <code>ansible-galaxy
+collection install</code> had to somehow figure the whole dependency tree that
+it's supposed to download and install. The code we had rather entangled.
+But things are going to change starting <a href="https://github.com/ansible/ansible">ansible-core</a> 2.11.
+And here's how.</p>
+<p>One of the <a href="https://docs.ansible.com/ansible-core/devel/roadmap/ROADMAP_2_11.html">items planned for ansible-core v2.11</a> was improving <code>ansible-galaxy collection</code> CLI 💻. The first
+thing needed was making possible to <a href="https://github.com/ansible/ansible/issues/71784">upgrade collections when using the
+<code>install</code> subcommand without requiring <code>--force</code> or
+<code>--force-with-deps</code></a>. This is something
+<a href="https://github.com/ansible/proposals/issues/181">people have been wanting</a> for quite a while but
+<a href="https://github.com/ansible/proposals/issues/23">wasn't possible for roles</a>.</p>
+<p>Then, we also wanted to introduce an additional <code>ansible-galaxy
+collection install [ -U | --upgrade ]</code> option. And we also considered
+working on the new <code>ansible-galaxy collection remove</code> subcommand but
+never had time to complete this stretch goal<sup class="footnote-ref" id="fnref-ansible collection rm"><a href="#fn-ansible collection rm">1</a></sup>.</p>
+<p>Another thing on our radar was caching HTTP responses to Galaxy API so
+that the dependency resolution process could become dramatically faster.</p>
+<p><a href="https://www.bloggingforlogging.com">Jordan</a>, <a href="https://github.com/s-hertel">Sloane</a> and I formed a feature team to work on this. We
+decided that we'll try to cut the subtasks one per person to spread the
+load somehow. <a href="https://www.bloggingforlogging.com">Jordan</a> was to work on caching, <a href="https://github.com/s-hertel">Sloane</a> was assigned to
+do the <code>--upgrade</code> task and I was supposed to work on updating the bare
+<code>install</code> command to make it not require <code>--force</code> (and
+<code>--force-with-deps</code> for that matter) when there's a need to update the
+already installed collections.</p>
+<p>I was almost unfamiliar with this part of <a href="https://github.com/ansible/ansible">ansible-core</a> so I needed to
+get myself familiar with it by starting with exloring the pointers of my
+colleagues on what functions will likely to need updates. What could
+possibly go wrong? Well, as I was going deeper and deeper down the
+rabbit hole, I realized that there was a lot of complexity in the
+existing code and we basically had a rather simplistic dependency
+resolver that looked like a yarn of leaky abstractions 🤯. It was hard
+to reason about what strategies it follows to get all the transitive
+dependencies for collections requested to be installed or downloaded.
+At the same time, I remembered that there is this other prominent
+project in the Python ecosystem — <a href="https://pip.pypa.io">pip</a> — that recently got a fresh out
+of the oven dependency resolver <a href="https://github.com/sarugaku/resolvelib">resolvelib</a> It's a third-party library
+that <a href="https://pip.pypa.io">pip</a> bundles but it's also freely available for use via <code>pip
+install</code>. My buddy <a href="https://pradyunsg.me">Pradyun</a> has been involved with this effort (the
+<a href="https://pip.pypa.io">pip</a> one) for about four years so I had somebody I could ask dumb
+questions about the dependency resolution :)</p>
+<p>And so the idea to replace the dependency resolver was born. Instead of
+patching a few places in the old code here and there, I thought why
+don't I <del>overengineer this task and refactor the whole thing</del> improve
+the maintainability of the subpackage dedicated to managing collection
+CLI subcommands!</p>
+<p>I must say that my enthusiasm to <del>break all the things</del> refine a whole
+bunch of already working code was met with a lot of suspicion within the
+broader Ansible Core Engineering team, at first. This additionally meant
+introducing a new runtime dependency — something that we almost never
+do. We now have a good mechanism to help OS packagers seamlessly bundle
+runtime dependencies, though<sup class="footnote-ref" id="fnref-_vendor/ dir"><a href="#fn-_vendor/ dir">2</a></sup>.</p>
+<p>I faced with a challenge — <em>I knew</em> that the idea was good and now I had
+to convince others that it's not as crazy as it may seem.</p>
+<p>I switched into the research mode, looked into what interfaces and hooks
+<a href="https://github.com/sarugaku/resolvelib">resolvelib</a> requires and came up with a tiny 225 LoC long
+<a href="https://github.com/webknjaz/ansible-galaxy-collection-resolver/blob/master/__main__.py">proof-of-concept</a>. I even <a href="https://github.com/webknjaz/ansible-galaxy-collection-resolver/blob/master/.github/workflows/demo.yml">wired the
+demo into GitHub Actions CI/CD</a> do people
+see the result instantly. After that, when folks saw how easy it is to
+connect <a href="https://github.com/sarugaku/resolvelib">resolvelib</a> and delegate the resolution correctness
+responsibility to it, the team agreed that this refactoring would be
+useful and we should proceed.</p>
+<p>Meanwhile <a href="https://www.bloggingforlogging.com">Jordan</a> was working on his caching task. So while I was busy
+figuring out where to stick <a href="https://github.com/sarugaku/resolvelib">resolvelib</a> into our spaghetti, <a href="https://www.bloggingforlogging.com">Jordan</a>
+submitted <a href="https://github.com/ansible/ansible/pull/71904">the API HTTP request caching PR</a> and
+it got merged without any problems.</p>
+<p>The resolver replacement work was so fundamental that it turned out to
+block virtually everything else related to our ansible-galaxy CLI UX
+improvements. This was no longer just my task. Yes, I was making most of
+the design for the new architecture but I got just enormous amount of
+help getting this to the finish line. And I enjoyed this collaboration
+so much!</p>
+<p>It wasn't just throwing old code away and adding the new one in place.
+One of our main objectives was to keep the behavior as close as possible
+to what the old code did. We've identified a lot of reduntant tests that
+could be removed, rewrote some of the unit tests into integration tests.
+We've also identified a ton of gaps in the test coverage which we filled
+in with many new tests (yaaay! 🙌). <a href="https://github.com/s-hertel">Sloane</a> also did a lot of manual
+behavior verification and testing 👏.</p>
+<h3>resolvelib and fancy design patterns</h3>
+<p>I mentioned earlier that <a href="https://github.com/sarugaku/resolvelib">resolvelib</a> was easy to integrate and even
+linked that extremely short PoC. This creates an illusion that it could
+be a "5-minute patch" but it totally wasn't.</p>
+<p><a href="https://github.com/sarugaku/resolvelib">resolvelib</a> requires one to implement an interface they call "provider"
+with the following hooks:</p>
+<ul>
+<li><code>identify(requirement_or_candidate)</code> — returns a unique identifier for
+the package (FQCN in our case)</li>
+<li><code>get_preference(resolution, candidates, information)</code> — makes a sort
+key determining the "importance" of a certain requirement</li>
+<li><code>find_matches(requirements)</code> — returns all candidates matching the
+given requirements</li>
+<li><code>is_satisfied_by(requirement, candidate)</code> — double-checks the
+correctness of the candidates resolver chooses</li>
+<li><code>get_dependencies(candidate)</code> — retrieves all the direct requirements
+that given candidate has</li>
+</ul>
+<p>This doesn't look too complicated, does it? That's because resolvelib
+really doesn't care what your requirements and candidates are for as
+long as you keep interfacing with it via the same data structures.</p>
+<p>This also means that the resolver <em>doesn't know where to get the info
+about the requirements and the candidates</em> beyond the data you provide
+to it by implementing these hooks.</p>
+<p>So we needed to implement talking to Galaxy API, taking into accont more
+than one Galaxy-like server as a source for retrieving collections. We
+needed to take into account non-Galaxy provided artifacts like direct
+URLs to tarballs or Git repos, or local files and folders.</p>
+<p>This all could easily increase the complexity so I introduced the
+concepts of a concrete artifacts manager, and a facade for talking to
+multiple Galaxy APIs and other metadata sources (including the artifacts
+manager). The artifacts manager is responsible for downloading and
+caching the artifacts (if they are not local) as well as retrieving (and
+caching) their metadata. It also has an alternative constructor that can
+clean up the cache directory upon exit.
+Both objects are initialized once (at the beginning) and are passed to
+the consumers as a dependency injection.</p>
+<p>Most of the packaging ecosystems are rather simple. They have packages
+with the content of one "atom" inside the artifact. Ansible Collections
+are mostly like that but there are additional cases which make
+everything substantionally more complex. One of the primary use-cases
+that differ is SCM-based collections — they may have one collection in
+the root of the repository but also in a certain (user-defined)
+subdirectory. Moreover, SCM targets may have multiple collections inside
+the same repository (in a namespace subdir that also can be nested as
+defined by the repo creators).
+To solve this, we mark Git targets as "virtual collections" during the
+dependency resolution. The artifacts manager downloads them into a
+temporary directory and marks that directory a single dependency of such
+a "virtual Git collection"). If there's subdirs, we do the same "virtual
+collection" trick with them (except unpacked dirs don't need to be
+copied into cache, the manager just holds their real paths in memory).
+These "virtual collections" are very helpful during the resolution and
+are skipped on the install step (after the resolution is complete).</p>
+<h3>Fin.</h3>
+<p>Well, that's about it. 3–4 months into experimentation, development,
+testing, polishing and reviews, days before the feature freeze, and the
+feature is in devel!</p>
+<p>Based on the refactoring, <a href="https://github.com/s-hertel">Sloane</a> was able to complete her work on the
+<code>--upgrade</code> option and it got merged too.</p>
+<h3>Feedback, please 🙏</h3>
+<p>If you are an end-user who uses <code>ansible-galaxy collection
+[download|install|list|verify]</code> subcommands, please make sure to tell us
+how well we managed to mix refactoring with the feature development this
+time. Hopefully, we've squashed all the bugs already 🤞 but we missed
+anything — <a href="https://github.com/ansible/ansible/issues/new/choose">let us know</a>! 🖖</p>
+<div class="footnotes">
+<hr>
+<ol><li id="fn-ansible collection rm"><p><a href="https://github.com/ansible/ansible/pull/73464">The attempt to implement it</a> revealed that we need more design discussion to define how exactly <code>ansible-galaxy collection uninstall</code> is supposed to work.<a href="#fnref-ansible collection rm" class="footnote">&#8617;</a></p></li>
+<li id="fn-_vendor/ dir"><p>The downstream packagers can now just drop the external dependencies into <code>lib/ansible/_vendor/</code> transparently instead of packaging them separately, <a href="https://github.com/ansible/ansible/pull/69850">starting ansible-base v2.10</a>.<a href="#fnref-_vendor/ dir" class="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
+  
+  </div>
+
+
+  </div>
+  <footer>
+    &copy; Copyright 2020–2021 by Sviatoslav Sydorenko
+  </footer>
+</body>
